@@ -77,8 +77,9 @@ async def send_skill_to_main(message: types.Message):
     for confg in configs.conf:
         main_address = confg.split(';')[0]
         private_key = confg.split(';')[1]
+        main = configs.address
         skill_balance = game.check_skill_balance(main_address)
-        await message.answer(text=game.transfer(main_address, private_key, skill_balance))
+        await message.answer(text=game.transfer(main_address, private_key, skill_balance, main))
 
 @dp.message_handler(filters.IDFilter(user_id=737483058), lambda message: message.text == 'Собрать XP')
 async def get_xp_rewards(message: types.Message):

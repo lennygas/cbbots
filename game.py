@@ -2,7 +2,6 @@ from web3 import Web3
 import json
 import time
 from math import floor
-import configs
 
 
 bsc = "https://bsc-dataseed.binance.org/"
@@ -13,7 +12,6 @@ game_address = '0x39Bea96e13453Ed52A734B6ACEeD4c41F57B2271'
 weapons_address = '0x7E091b0a220356B157131c831258A9C98aC8031A'
 characters_address = '0xc6f252c2CdD4087e30608A35c022ce490B58179b'
 skill_address = '0x154A9F9cbd3449AD22FDaE23044319D6eF2a1Fab'
-me = configs.address
 defaultAddress = '0x0000000000000000000000000000000000000000'
 
 abi_oracle = json.loads('[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"currentPrice","type":"uint256"}],"name":"CurrentPriceUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"inputs":[],"name":"DEFAULT_ADMIN_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"PRICE_UPDATER","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"currentPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"getRoleMember","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleMemberCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_currentPrice","type":"uint256"}],"name":"setCurrentPrice","outputs":[],"stateMutability":"nonpayable","type":"function"}]')
@@ -341,10 +339,10 @@ def claim_rewards(address, pkey):
 def check_skill_balance(address):
     return skill_contract.functions.balanceOf(address).call()
 
-def transfer(address, pkey, balance):
+def transfer(address, pkey, balance, main):
     if balance >= 0.05:
         nonce = web3.eth.get_transaction_count(address)
-        transfer_build = skill_contract.functions.transfer(me, balance).buildTransaction({
+        transfer_build = skill_contract.functions.transfer(main, balance).buildTransaction({
             'chainId': 56, 'gas': 240000, 'gasPrice': web3.toWei('5', 'gwei'), 'nonce': nonce
         })
         sign_transfer = web3.eth.account.sign_transaction(transfer_build, private_key=pkey)
